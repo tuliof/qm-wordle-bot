@@ -1,29 +1,44 @@
+_metadata:
+  major_version: 1
+  minor_version: 1
 display_information:
-  name: Getting Started Bolt App
+  name: QMWordle
+  long_description: QM's very own wordle bot! Compete with your coworkers to gain the highest score. With org-wide statistics and bot interactions, you would not need to leave slack to play wordle (woah!). Happy wordling
+  description: Compete with your coworkers with a game of wordle!
+  background_color: "#0000AA"
+settings:
+  socket_mode_enabled: true
+  interactivity:
+    is_enabled: true
+    request_url: https://example.com/slack/message_action
+  event_subscriptions:
+    bot_events:
+      - app_mention
+      - app_home_opened
+      - bot_message
+      - channel_joined
 features:
   app_home:
-    home_tab_enabled: false
+    home_tab_enabled: true
     messages_tab_enabled: true
     messages_tab_read_only_enabled: false
   bot_user:
-    display_name: BoltApp
-    always_online: true
+    display_name: WordleBot
+  slash_commands:
+    - command: /wordle
+      description: It's wordle time
+      usage_hint: /wordle open mailbox
+      url: https://example.com/slack/slash/please
 oauth_config:
   scopes:
     bot:
       - channels:history
       - channels:join
       - commands
+      - channels:read
       - chat:write
+      - chat:write:public
+      - chat:write:bot
       - im:history
-settings:
-  event_subscriptions:
-    bot_events:
-      - message.channels
-      - message.im
-  interactivity:
-    is_enabled: true
-  org_deploy_enabled: false
-  socket_mode_enabled: true
-  is_hosted: false
-  token_rotation_enabled: false
+  redirect_urls:
+    - https://example.com/slack/auth
