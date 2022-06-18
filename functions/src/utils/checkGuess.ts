@@ -1,25 +1,28 @@
-import { GoodWordsDictionary } from './database';
+import { GuessWords, AnswerWords } from "../static/";
 
 const ColorCode = {
-  GREY: 'grey',
-  GREEN: 'green',
-  YELLOW: 'yellow',
+  GREY: "grey",
+  GREEN: "green",
+  YELLOW: "yellow",
 };
 
-function checkGuess(guess: string, guessesRemaining: number, answer: string) {
+export function checkGuess(
+  guess: string,
+  guessesRemaining: number,
+  answer: string
+) {
   let currentGuess = Array.from(guess);
   let rightGuess = Array.from(answer);
-  let WORDS = GoodWordsDictionary; //this is the list of whitelisted words
   let resultColorArray = [];
   let correct = false;
 
   if (guess.length != 5) {
-    console.log('Not enough letters!');
+    console.log("Not enough letters!");
     return;
   }
 
-  if (!WORDS.includes(guess)) {
-    console.log('Word not in list!');
+  if (!GuessWords.includes(guess)) {
+    console.log("Word not in list!");
     return;
   }
 
@@ -41,7 +44,7 @@ function checkGuess(guess: string, guessesRemaining: number, answer: string) {
   }
 
   if (guess === answer) {
-    console.log('You guessed right! Game over!');
+    console.log("You guessed right! Game over!");
     correct = true;
   } else {
     guessesRemaining -= 1;

@@ -1,7 +1,7 @@
-import { app } from './utils/slack';
-import { initMessages } from './events/messages';
-import { initCommands } from './events/commands';
-import { SLACK_APP_PORT } from './utils/env';
+import { app } from "./utils/slack";
+import { initMessages } from "./events/messages";
+import { initCommands } from "./events/commands";
+import { SLACK_APP_PORT } from "./utils/env";
 
 initMessages(app);
 initCommands(app);
