@@ -39,7 +39,6 @@ const initMessages = async (app: App) => {
       }
 
       const currentPlayer = matches.get(msg.user)!;
-
       console.log("🌟 wordOfTheDay", wordOfTheDay.word);
       const guess = msg.text;
 
@@ -49,6 +48,13 @@ const initMessages = async (app: App) => {
         say("👾 Game Over, see you tomorrow! 👋");
       } else {
         const result = checkGuess(guess, wordOfTheDay.word);
+
+        if (result.type === "invalid") {
+          //wtf, copilot suggested this w/ the emoji
+          say("🤔 Invalid guess, please try again!");
+          return;
+        }
+
         currentPlayer.guesses = currentPlayer.guesses
           ? [...currentPlayer.guesses, guess]
           : [guess];
@@ -77,11 +83,9 @@ const initMessages = async (app: App) => {
               say("You are out of guesses!");
             }
             break;
-          case "invalid":
-            say(`Please enter a valid word`);
-            break;
         }
       }
+      return;
     } catch (error) {
       console.log("err");
       console.error(error);
