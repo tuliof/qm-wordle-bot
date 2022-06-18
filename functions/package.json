@@ -3,16 +3,10 @@
   "version": "1.0.0",
   "description": "A Wordle Slack bot for the 2022 Quantum Mob Hackathon",
   "main": "app.js",
-  "author": "@tuliof, @wongleo7, @narathota",
-  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tuliof/qm-wordle-bot.git"
   },
-  "bugs": {
-    "url": "https://github.com/tuliof/qm-wordle-bot/issues"
-  },
-  "homepage": "https://github.com/tuliof/qm-wordle-bot#readme",
   "keywords": [
     "wordle",
     "slack",
@@ -20,30 +14,24 @@
     "qm",
     "hackathon"
   ],
+  "author": "@tuliof, @wongleo7, @narathota",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tuliof/qm-wordle-bot/issues"
+  },
+  "homepage": "https://github.com/tuliof/qm-wordle-bot#readme",
   "scripts": {
-    "lint": "eslint --ext .js,.ts .",
-    "build": "tsc",
-    "build:watch": "tsc --watch",
-    "serve": "npm run build && firebase emulators:start --only functions",
-    "shell": "npm run build && firebase functions:shell",
-    "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "start": "node ./src/index.js",
+    "dev": "nodemon ./src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "firebase-admin": "^10.0.2",
-    "firebase-functions": "^3.18.0"
+    "@slack/bolt": "^3.6.0",
+    "firebase-admin": "^11.0.0",
+    "firebase-functions": "^3.21.2"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.12.0",
-    "@typescript-eslint/parser": "^5.12.0",
-    "eslint": "^8.9.0",
-    "eslint-config-google": "^0.14.0",
-    "eslint-plugin-import": "^2.25.4",
-    "firebase-functions-test": "^0.2.0",
-    "typescript": "^4.5.4",
-    "@slack/bolt": "^3.6.0",
+    "nodemon": "^2.0.16",
     "dotenv": "^16.0.1"
-  },
-  "private": true
+  }
 }
