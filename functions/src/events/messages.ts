@@ -40,14 +40,14 @@ const initMessages = async (app: App) => {
       const guess = msg.text;
 
       if (currentPlayer.status === "win") {
-        say(messages.gameOverWin);
+        await say(messages.gameOverWin);
       } else if (currentPlayer.status === "lose") {
-        say(messages.gameOverLost);
+        await say(messages.gameOverLost);
       } else {
         const result = checkGuess(guess, wordOfTheDay.word);
         if (result.type === "invalid") {
           //wtf, copilot suggested this w/ the emoji
-          say(messages.invalid);
+          await say(messages.invalid);
           return;
         }
 
@@ -55,6 +55,23 @@ const initMessages = async (app: App) => {
 
         if (result.resultColorArray.length > 0) {
           currentPlayer.guessesColor.push(result.resultColorArray);
+        }
+
+        switch (result.type) {
+          case "correct":
+            currentPlayer.status = "win";
+            const score = `\n<@${msg.user}> ${currentPlayer.guesses.length}/6`;
+            await say(`${messages.correct}${score}`);
+            break;
+          case "wrong":
+            if (currentPlayer.guesses.length === 6) {
+              currentPlayer.status = "lose";
+              const score = `\n<@${msg.user}> X/6`;
+              await say(`${messages.end.replace("wordOfTheDay", wordOfTheDay.word)}${score}`);
+            } else if (currentPlayer.guesses.length > 6) {
+              await say(messages.outOfGuesses);
+            }
+            break;
         }
 
         // Print the squares
@@ -65,24 +82,8 @@ const initMessages = async (app: App) => {
         for (let i = currentPlayer.guesses.length; i < 6; i++) {
           squares += `${blankSquares()}\n`;
         }
-        say(squares);
+        await say(squares);
 
-        switch (result.type) {
-          case "correct":
-            currentPlayer.status = "win";
-            const score = `\n<@${msg.user}> ${currentPlayer.guesses.length}/6`;
-            say(`${messages.correct}${score}`);
-            break;
-          case "wrong":
-            if (currentPlayer.guesses.length === 6) {
-              currentPlayer.status = "lose";
-              const score = `\n<@${msg.user}> X/6`;
-              say(`${messages.end.replace("wordOfTheDay", wordOfTheDay.word)}${score}`);
-            } else if (currentPlayer.guesses.length > 6) {
-              say(messages.outOfGuesses);
-            }
-            break;
-        }
         updateScores(currentPlayer);
       }
       return;
