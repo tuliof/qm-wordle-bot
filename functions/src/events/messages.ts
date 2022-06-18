@@ -1,16 +1,12 @@
-import {
-  getWordOfTheDay,
-  getNotifyList,
-  addToNotify,
-  addToLeaderboard,
-} from "../db/index";
+import { getWordOfTheDay } from "../db/index";
 import { App } from "../utils/slack";
 import { checkGuess } from "../utils/checkGuess";
 import moment from "moment";
-import convertToSquares from "../utils/convertToSquares";
+import convertToSquares, { blankSquares } from "../utils/convertToSquares";
+import { updateScores } from "../services/updateScores";
 
-type match = {
-  player: string;
+export type Match = {
+  playerId: string;
   guesses: string[];
   guessesColor: string[][];
   word: string;
@@ -21,7 +17,7 @@ type match = {
 const initMessages = async (app: App) => {
   const wordOfTheDay = await getWordOfTheDay();
 
-  const matches: Map<string, match> = new Map();
+  const matches: Map<string, Match> = new Map();
 
   app.message(/[\s\S]*/, async ({ message, say }) => {
     try {
@@ -29,7 +25,7 @@ const initMessages = async (app: App) => {
 
       if (!matches.get(msg.user)) {
         matches.set(msg.user, {
-          player: msg.user,
+          playerId: msg.user,
           word: wordOfTheDay.word,
           date: moment().format(),
           guesses: [],
@@ -48,7 +44,6 @@ const initMessages = async (app: App) => {
         say("👾 Game Over, see you tomorrow! 👋");
       } else {
         const result = checkGuess(guess, wordOfTheDay.word);
-
         if (result.type === "invalid") {
           //wtf, copilot suggested this w/ the emoji
           say("🤔 Invalid guess, please try again!");
@@ -68,6 +63,9 @@ const initMessages = async (app: App) => {
         for (let i = 0; i < currentPlayer.guessesColor.length; i++) {
           squares += `${convertToSquares(currentPlayer.guessesColor[i])}\n`;
         }
+        for (let i = currentPlayer.guesses.length; i < 6; i++) {
+          squares += `${blankSquares()}\n`;
+        }
         say(squares);
 
         switch (result.type) {
@@ -76,15 +74,16 @@ const initMessages = async (app: App) => {
             say(`You guessed right! Congratulations 🏆`);
             break;
           case "wrong":
-            if (currentPlayer.guesses.length === 5) {
+            if (currentPlayer.guesses.length === 6) {
               currentPlayer.status = "lose";
               say(`You lose 😵 The word was **${wordOfTheDay.word}**`);
-            } else if (currentPlayer.guesses.length > 5) {
+            } else if (currentPlayer.guesses.length > 6) {
               say("You are out of guesses!");
             }
             break;
         }
       }
+      updateScores(currentPlayer);
       return;
     } catch (error) {
       console.log("err");

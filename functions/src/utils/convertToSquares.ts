@@ -14,5 +14,12 @@ function convert(colors: string[]): string {
   });
   return squares.join("");
 }
+export function blankSquares() {
+  return [...Array(5)]
+    .map(() => {
+      return ":white_large_square:";
+    })
+    .join("");
+}
 
 export default convert;
