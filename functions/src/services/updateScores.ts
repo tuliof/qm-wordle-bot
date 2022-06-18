@@ -8,7 +8,7 @@ export async function updateScores(report: Match) {
 
   updatedProfile = await recordMatch(report);
   if (report.status === "win") {
-    addToNotify(userId);
+    addToNotify(report);
     addToLeaderboard(userId, updatedProfile.score);
   }
 
