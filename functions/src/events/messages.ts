@@ -38,41 +38,42 @@ const initMessages = async (app: App) => {
       console.log("🌟 wordOfTheDay", wordOfTheDay.word);
       const guess = msg.text;
 
-      if (currentPlayer.guesses.length > 5) {
-        say("You are out of guesses!");
-        return;
-      }
+      if (currentPlayer.status === "win") {
+        say("🏆 You did it, see you tomorrow champ! 👋");
+      } else if (currentPlayer.status === "lose") {
+        say("👾 Game Over, see you tomorrow! 👋");
+      } else {
+        const result = checkGuess(guess, wordOfTheDay.word);
+        currentPlayer.guesses = currentPlayer.guesses ? [...currentPlayer.guesses, guess] : [guess];
 
-      const result = checkGuess(guess, wordOfTheDay.word);
-      currentPlayer.guesses = currentPlayer.guesses ? [...currentPlayer.guesses, guess] : [guess];
+        if (result.resultColorArray.length > 0) {
+          currentPlayer.guessesColor.push(result.resultColorArray);
+        }
 
-      if (result.resultColorArray.length > 0) {
-        currentPlayer.guessesColor.push(result.resultColorArray);
-      }
+        // Print the squares
+        let squares = "";
+        for (let i = 0; i < currentPlayer.guessesColor.length; i++) {
+          squares += `${convertToSquares(currentPlayer.guessesColor[i])}\n`;
+        }
+        say(squares);
 
-      // Print the squares
-      let squares = "";
-      for (let i = 0; i < currentPlayer.guessesColor.length; i++) {
-        squares += `${convertToSquares(currentPlayer.guessesColor[i])}\n`;
-      }
-      say(squares);
-
-      switch (result.type) {
-        case "correct":
-          currentPlayer.status = "win";
-          say(`You guessed right! Congratulations 🏆`);
-          break;
-        case "wrong":
-          if (currentPlayer.guesses.length === 5) {
-            currentPlayer.status = "lose";
-            say(`You lose! The word was ${wordOfTheDay.word}`);
-          } else if (currentPlayer.guesses.length > 5) {
-            say("You are out of guesses!");
-          }
-          break;
-        case "invalid":
-          say(`Please enter a valid word`);
-          break;
+        switch (result.type) {
+          case "correct":
+            currentPlayer.status = "win";
+            say(`You guessed right! Congratulations 🏆`);
+            break;
+          case "wrong":
+            if (currentPlayer.guesses.length === 5) {
+              currentPlayer.status = "lose";
+              say(`You lose 😵 The word was **${wordOfTheDay.word}**`);
+            } else if (currentPlayer.guesses.length > 5) {
+              say("You are out of guesses!");
+            }
+            break;
+          case "invalid":
+            say(`Please enter a valid word`);
+            break;
+        }
       }
     } catch (error) {
       console.log("err");
