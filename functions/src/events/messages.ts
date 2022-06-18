@@ -4,6 +4,7 @@ import { checkGuess } from "../utils/checkGuess";
 import moment from "moment";
 import convertToSquares, { blankSquares } from "../utils/convertToSquares";
 import { updateScores } from "../services/updateScores";
+import { messages } from "../constants/messages";
 
 export type Match = {
   playerId: string;
@@ -39,20 +40,18 @@ const initMessages = async (app: App) => {
       const guess = msg.text;
 
       if (currentPlayer.status === "win") {
-        say("🏆 You did it, see you tomorrow champ! 👋");
+        say(messages.gameOverWin);
       } else if (currentPlayer.status === "lose") {
-        say("👾 Game Over, see you tomorrow! 👋");
+        say(messages.gameOverLost);
       } else {
         const result = checkGuess(guess, wordOfTheDay.word);
         if (result.type === "invalid") {
           //wtf, copilot suggested this w/ the emoji
-          say("🤔 Invalid guess, please try again!");
+          say(messages.invalid);
           return;
         }
 
-        currentPlayer.guesses = currentPlayer.guesses
-          ? [...currentPlayer.guesses, guess]
-          : [guess];
+        currentPlayer.guesses = currentPlayer.guesses ? [...currentPlayer.guesses, guess] : [guess];
 
         if (result.resultColorArray.length > 0) {
           currentPlayer.guessesColor.push(result.resultColorArray);
@@ -71,14 +70,14 @@ const initMessages = async (app: App) => {
         switch (result.type) {
           case "correct":
             currentPlayer.status = "win";
-            say(`You guessed right! Congratulations 🏆`);
+            say(messages.correct);
             break;
           case "wrong":
             if (currentPlayer.guesses.length === 6) {
               currentPlayer.status = "lose";
-              say(`You lose 😵 The word was **${wordOfTheDay.word}**`);
+              say(messages.end.replace("wordOfTheDay", wordOfTheDay.word));
             } else if (currentPlayer.guesses.length > 6) {
-              say("You are out of guesses!");
+              say(messages.outOfGuesses);
             }
             break;
         }
