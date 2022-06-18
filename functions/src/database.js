@@ -21,8 +21,11 @@ const firebaseConfig = {
 //   return result.word;
 // };
 
+const GoodWordsDictionary = ["acrid", "butte", "cable", "front", "froth", "intro", "lurid", "mourn", "prune"];
+
 exports.getSingleWordArray = async function () {
-  const words = ["acrid", "butte", "cable", "front", "froth", "intro", "lurid", "mourn", "prune"];
-  const random = Math.floor(Math.random() * (words.length - 1) + 1);
-  return words[random];
+  const random = Math.floor(Math.random() * (GoodWordsDictionary.length - 1) + 1);
+  return GoodWordsDictionary[random];
 };
+
+exports.GoodWordsDictionary = GoodWordsDictionary;

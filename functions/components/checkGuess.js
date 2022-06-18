@@ -1,3 +1,5 @@
+const { GoodWordsDictionary } = require("../src/database")
+
 const ColorCode = {
 	GREY: "grey",
 	GREEN: "green",
@@ -7,7 +9,7 @@ const ColorCode = {
 function checkGuess (guessString, guessesRemaining, answer) {
     let currentGuess = Array.from(guessString)
     let rightGuess = Array.from(answer)
-    let WORDS = [] //this is the list of whitelisted words
+    let WORDS = GoodWordsDictionary //this is the list of whitelisted words
     let resultColorArray = []
     let correct = false
 
