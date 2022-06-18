@@ -1,26 +1,37 @@
-import { GoodWordsDictionary } from './database';
+import { GoodWordsDictionary } from "./database";
 
 const ColorCode = {
-  GREY: 'grey',
-  GREEN: 'green',
-  YELLOW: 'yellow',
+  GREY: "grey",
+  GREEN: "green",
+  YELLOW: "yellow",
 };
 
-function checkGuess(guess: string, guessesRemaining: number, answer: string) {
+type guessResult = {
+  resultColorArray: string[];
+  message: string;
+  type: "correct" | "wrong" | "invalid";
+};
+
+export function checkGuess(guess: string, answer: string): guessResult {
+  const result: guessResult = {
+    resultColorArray: [],
+    message: "",
+    type: "wrong",
+  };
   let currentGuess = Array.from(guess);
   let rightGuess = Array.from(answer);
   let WORDS = GoodWordsDictionary; //this is the list of whitelisted words
-  let resultColorArray = [];
-  let correct = false;
 
   if (guess.length != 5) {
-    console.log('Not enough letters!');
-    return;
+    result.message = "Please enter a 5-letter word";
+    result.type = "invalid";
+    return result;
   }
 
   if (!WORDS.includes(guess)) {
-    console.log('Word not in list!');
-    return;
+    result.message = "Please enter a valid word";
+    result.type = "invalid";
+    return result;
   }
 
   for (let i = 0; i < 5; i++) {
@@ -37,19 +48,12 @@ function checkGuess(guess: string, guessesRemaining: number, answer: string) {
         letterColor = ColorCode.YELLOW;
       }
     }
-    resultColorArray.push(letterColor);
+    result.resultColorArray.push(letterColor);
   }
 
   if (guess === answer) {
-    console.log('You guessed right! Game over!');
-    correct = true;
-  } else {
-    guessesRemaining -= 1;
+    result.type = "correct";
   }
 
-  return {
-    resultColorArray,
-    guessesRemaining: guessesRemaining - 1,
-    correct: correct,
-  };
+  return result;
 }

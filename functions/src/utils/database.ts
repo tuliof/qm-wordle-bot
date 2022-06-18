@@ -1,7 +1,7 @@
 // const firebase = require("firebase/app");
 // const { getFirestore, collection, getDocs } = require("firebase/firestore/lite");
-
-import moment from 'moment';
+import * as dictionary from "../constants/valid_words.json";
+import moment from "moment";
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -23,7 +23,7 @@ const firebaseConfig = {
 //   return result.word;
 // };
 
-export const GoodWordsDictionary = ['acrid', 'butte', 'cable', 'front', 'froth', 'intro', 'lurid', 'mourn', 'prune'];
+export const GoodWordsDictionary = dictionary.validWords;
 
 export async function getSingleWordArray() {
   const random = Math.floor(Math.random() * (GoodWordsDictionary.length - 1) + 1);
@@ -31,16 +31,16 @@ export async function getSingleWordArray() {
 }
 
 export let wordOfTheDay = {
-  word: '',
-  date: '',
+  word: "",
+  date: "",
 };
 
 export async function getWordOfTheDay() {
-  const isNewDay = moment().diff(moment(wordOfTheDay.date), 'days') > 0;
+  const isNewDay = moment().diff(moment(wordOfTheDay.date), "days") > 0;
   if (wordOfTheDay.word.length === 0 || isNewDay) {
     const word = await getSingleWordArray();
     wordOfTheDay.word = word;
-    wordOfTheDay.date = moment().format('YYYY-MM-DD');
+    wordOfTheDay.date = moment().format("YYYY-MM-DD");
   }
   return wordOfTheDay;
 }
