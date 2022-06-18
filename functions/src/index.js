@@ -1,6 +1,8 @@
+const { App } = require("@slack/bolt");
+require("dotenv").config();
+
 const functions = require('firebase-functions');
 const config = functions.config();
-const { App } = require("@slack/bolt");
 
 /* 
 This sample slack application uses SocketMode
@@ -12,8 +14,9 @@ see: https://slack.dev/bolt-js/tutorial/getting-started
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
-  socketMode: true,
   appToken: process.env.SLACK_APP_TOKEN,
+  socketMode: true,
+  port: process.env.PORT || 3000,
 });
 
 // Listens to incoming messages that contain "hello"
@@ -49,7 +52,7 @@ app.action("button_click", async ({ body, ack, say }) => {
 
 (async () => {
   // Start your app
-  await app.start(process.env.PORT || 3000);
+  await app.start();
 
   console.log("⚡️ Bolt app is running!");
 })();
