@@ -4,7 +4,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 const GameData = "gamedata";
 const Leaderboard = "leaderboard";
 
-type LeaderboardEntry = {
+export type LeaderboardEntry = {
   id: string;
   score: number;
 };

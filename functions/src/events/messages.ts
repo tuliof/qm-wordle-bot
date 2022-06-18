@@ -82,8 +82,8 @@ const initMessages = async (app: App) => {
             }
             break;
         }
+        updateScores(currentPlayer);
       }
-      updateScores(currentPlayer);
       return;
     } catch (error) {
       console.log("err");
