@@ -4,8 +4,8 @@
   "description": "A Wordle Slack bot for the 2022 Quantum Mob Hackathon",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
+    "start": "node functions/src/index.js",
+    "dev": "nodemon functions/src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
