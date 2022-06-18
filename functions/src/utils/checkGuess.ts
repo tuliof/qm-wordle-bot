@@ -1,58 +1,56 @@
-import { GuessWords, AnswerWords } from "../static/";
+import * as dictionary from "../constants/valid_words.json";
 
-const ColorCode = {
-  GREY: "grey",
-  GREEN: "green",
-  YELLOW: "yellow",
+type ColorCode = "grey" | "green" | "yellow";
+
+type guessResult = {
+  resultColorArray: string[];
+  message: string;
+  type: "correct" | "wrong" | "invalid";
 };
 
-export function checkGuess(
-  guess: string,
-  guessesRemaining: number,
-  answer: string
-) {
+const ValidWords = dictionary.validWords;
+
+export function checkGuess(guess: string, answer: string): guessResult {
+  const result: guessResult = {
+    resultColorArray: [],
+    message: "",
+    type: "wrong",
+  };
   let currentGuess = Array.from(guess);
   let rightGuess = Array.from(answer);
-  let resultColorArray = [];
-  let correct = false;
 
   if (guess.length != 5) {
-    console.log("Not enough letters!");
-    return;
+    result.message = "Please enter a 5-letter word";
+    result.type = "invalid";
+    return result;
   }
 
-  if (!GuessWords.includes(guess)) {
-    console.log("Word not in list!");
-    return;
+  if (!ValidWords.includes(guess)) {
+    result.message = "Please enter a valid word";
+    result.type = "invalid";
+    return result;
   }
 
   for (let i = 0; i < 5; i++) {
-    let letterColor = ColorCode.GREY;
+    let letterColor: ColorCode = "grey";
 
     let letterPosition = rightGuess.indexOf(currentGuess[i]);
 
     if (letterPosition === -1) {
-      letterColor = ColorCode.GREY;
+      letterColor = "grey";
     } else {
       if (currentGuess[i] === rightGuess[i]) {
-        letterColor = ColorCode.GREEN;
+        letterColor = "green";
       } else {
-        letterColor = ColorCode.YELLOW;
+        letterColor = "yellow";
       }
     }
-    resultColorArray.push(letterColor);
+    result.resultColorArray.push(letterColor);
   }
 
   if (guess === answer) {
-    console.log("You guessed right! Game over!");
-    correct = true;
-  } else {
-    guessesRemaining -= 1;
+    result.type = "correct";
   }
 
-  return {
-    resultColorArray,
-    guessesRemaining: guessesRemaining - 1,
-    correct: correct,
-  };
+  return result;
 }
