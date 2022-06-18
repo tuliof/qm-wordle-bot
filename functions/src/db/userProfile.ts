@@ -45,13 +45,18 @@ export async function updateUserProfile(
   return;
 }
 
+//Come here to see how scores are calculated:
+function calculateScore(noGuesses: number) {
+  return 7 - noGuesses;
+}
+
 export async function recordMatch(match: Match) {
   const userId = match.playerId;
   const userProfile = (await getUserProfile(userId)) ?? ({} as UserProfile);
   const dmRef = doc(db, UserProfile, userId);
 
   const turns = match.guesses.length;
-  const gameScore = userProfile?.totalScore ?? 0 + (6 - turns);
+  const gameScore = userProfile?.totalScore ?? 0 + calculateScore(turns);
 
   const updatedProfile = {
     ...userProfile,
