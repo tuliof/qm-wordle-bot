@@ -44,7 +44,7 @@ export function checkGuess(guess: string, answer: string): GuessResult {
   //do up all the yellows
   rightGuess.forEach((_, i) => {
     let matchIndex = rightGuess.indexOf(currentGuess[i]);
-    if (matchIndex !== -1) {
+    if (matchIndex !== -1 && colorAnswerArray[i] !== "green") {
       rightGuess[matchIndex] = undefined;
       colorAnswerArray[i] = "yellow";
     }
