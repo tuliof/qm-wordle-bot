@@ -1,5 +1,5 @@
 import moment from "moment";
-import { AnswerWords } from "../static/index";
+import { AnswerWords } from "../constants/index";
 
 export async function getSingleWordArray() {
   const random = Math.floor(Math.random() * (AnswerWords.length - 1) + 1);
