@@ -70,12 +70,14 @@ const initMessages = async (app: App) => {
         switch (result.type) {
           case "correct":
             currentPlayer.status = "win";
-            say(messages.correct);
+            const score = `\n<@${msg.user}> ${currentPlayer.guesses.length}/6`;
+            say(`${messages.correct}${score}`);
             break;
           case "wrong":
             if (currentPlayer.guesses.length === 6) {
               currentPlayer.status = "lose";
-              say(messages.end.replace("wordOfTheDay", wordOfTheDay.word));
+              const score = `\n<@${msg.user}> X/6`;
+              say(`${messages.end.replace("wordOfTheDay", wordOfTheDay.word)}${score}`);
             } else if (currentPlayer.guesses.length > 6) {
               say(messages.outOfGuesses);
             }
