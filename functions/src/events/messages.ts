@@ -37,8 +37,13 @@ const initMessages = async (app: App) => {
 
       console.log("🌟 wordOfTheDay", wordOfTheDay.word);
       const guess = msg.text;
-      const result = checkGuess(guess, wordOfTheDay.word);
 
+      if (currentPlayer.guesses.length > 5) {
+        say("You are out of guesses!");
+        return;
+      }
+
+      const result = checkGuess(guess, wordOfTheDay.word);
       currentPlayer.guesses = currentPlayer.guesses ? [...currentPlayer.guesses, guess] : [guess];
 
       if (result.resultColorArray.length > 0) {
@@ -61,6 +66,8 @@ const initMessages = async (app: App) => {
           if (currentPlayer.guesses.length === 5) {
             currentPlayer.status = "lose";
             say(`You lose! The word was ${wordOfTheDay.word}`);
+          } else if (currentPlayer.guesses.length > 5) {
+            say("You are out of guesses!");
           }
           break;
         case "invalid":
