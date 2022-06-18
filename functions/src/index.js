@@ -1,4 +1,5 @@
 const { App } = require("@slack/bolt");
+const moment = require("moment");
 require("dotenv").config();
 
 const functions = require("firebase-functions");
@@ -25,20 +26,27 @@ let wordOfTheDay = {
   date: "",
 };
 
+async function getWordOfTheDay() {
+  const isNewDay = moment().diff(moment(wordOfTheDay.date), "days") > 0;
+  if (wordOfTheDay.word.length === 0 || isNewDay) {
+    const word = await getSingleWordArray();
+    wordOfTheDay.word = word;
+    wordOfTheDay.date = moment().format("YYYY-MM-DD");
+  }
+  return wordOfTheDay;
+}
+
 // Listens to incoming messages that contain "hello"
 app.message("hello", async ({ message, say }) => {
   // say() sends a message to the channel where the event was triggered
-  if (wordOfTheDay.word.length === 0) {
-    const word = await getSingleWordArray();
-    wordOfTheDay.word = word;
-  }
+  const wotd = await getWordOfTheDay();
   await say({
     blocks: [
       {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `Hey there <@${message.user}>!!! The word is ${wordOfTheDay.word}`,
+          text: `Hey there <@${message.user}>!!! The word is ${wotd.word}`,
         },
         accessory: {
           type: "button",
@@ -50,7 +58,7 @@ app.message("hello", async ({ message, say }) => {
         },
       },
     ],
-    text: `Hey there <@${message.user}>! The word is ${wordOfTheDay.word}`,
+    text: `Hey there <@${message.user}>! The word is ${wotd.word}`,
   });
 });
 
