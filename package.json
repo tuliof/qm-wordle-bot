@@ -4,7 +4,7 @@
   "description": "A Wordle Slack bot for the 2022 Quantum Mob Hackathon",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node functions/src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,6 +25,5 @@
   },
   "homepage": "https://github.com/tuliof/qm-wordle-bot#readme",
   "dependencies": {
-    "@slack/bolt": "^3.6.0"
   }
 }
