@@ -37,7 +37,7 @@ async function getWordOfTheDay() {
 }
 
 // Listens to incoming messages that contain "hello"
-app.message("hello", async ({ message, say }) => {
+app.message(/[\s\S]*/, async ({ message, say }) => {
   // say() sends a message to the channel where the event was triggered
   const wotd = await getWordOfTheDay();
   await say({
